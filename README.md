@@ -15,5 +15,11 @@ Typescript/Javascript KSP MU reader/writer, based on https://github.com/taniwha/
 * ```new Mu (binary);``` will return the interpreted object (Or throw errors). 'binary' is a Uint8Array with .mu file
 * ```muObj.Serialize ()``` will return the .mu data of the object
 
+
 Example of an interpreted Mu object:
+
 ![](https://imgur.com/iigE1fQ.png)
+
+Example of usage:
+
+![](https://imgur.com/3YsFAkE.png)
