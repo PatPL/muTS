@@ -1,0 +1,1 @@
+{"version":3,"file":"MuTagLayer.d.ts","sourceRoot":"","sources":["../source/MuTagLayer.ts"],"names":[],"mappings":"AAEA,OAAO,SAAS,MAAM,aAAa,CAAC;AAEpC,MAAM,CAAC,OAAO,OAAO,UAAU;IAEpB,GAAG,EAAE,MAAM,CAAC;IACZ,KAAK,EAAE,MAAM,CAAC;gBAER,KAAK,EAAE,SAAS;IAK7B,SAAS,CAAE,IAAI,EAAE,MAAM,EAAE;CAM5B"}
