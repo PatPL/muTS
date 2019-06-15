@@ -1325,4 +1325,4 @@ class MuColliderWheel {
         this.SidewaysFriction.Serialize(data);
     }
 }
-//# sourceMappingURL=ts-mu-io.js.map
+//# sourceMappingURL=muTS.js.map

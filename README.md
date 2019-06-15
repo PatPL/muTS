@@ -1,11 +1,11 @@
-# TS-MU-IO
+# muTS
 Typescript/Javascript KSP MU reader/writer, based on https://github.com/taniwha/io_object_mu
 
 ## Installation:
 
 ### No module resolution:
-* Get all 'ts-mu-io.*' from VanillaJS folder
-* Include the ts-mu.io.js to the html using ```<script src="[location]/ts-mu-io.js"></script>``` tag
+* Get all 'muTS.*' from VanillaJS folder
+* Include the muTS.js to the html using ```<script src="[location]/muTS.js"></script>``` tag
 
 ### AMD module resolution:
 * Get all files from 'AMDModules/bin/'

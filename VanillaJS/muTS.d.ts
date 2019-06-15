@@ -361,4 +361,4 @@ declare class MuColliderWheel {
     constructor(array: IMuBinary);
     Serialize(data: number[]): void;
 }
-//# sourceMappingURL=ts-mu-io.d.ts.map
+//# sourceMappingURL=muTS.d.ts.map
