@@ -5,6 +5,7 @@ class MuAnimation {
     public Autoplay: number;
     
     constructor (array: IMuBinary) {
+        if ((window as any).muTSlog) { console.log (`Reading MuAnimation @${array.offset}`) };
         let ClipCount = MuBitConverter.ReadInt (array);
         for (let i = 0; i < ClipCount; ++i) {
             this.Clips.push (new MuClip (array));

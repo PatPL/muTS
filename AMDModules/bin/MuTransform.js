@@ -7,6 +7,10 @@ define(["require", "exports", "./MuBitConverter"], function (require, exports, M
     MuBitConverter_1 = __importDefault(MuBitConverter_1);
     class MuTransform {
         constructor(array) {
+            if (window.muTSlog) {
+                console.log(`Reading MuTransform @${array.offset}`);
+            }
+            ;
             this.Name = MuBitConverter_1.default.ReadString(array);
             this.LocalPosition = MuBitConverter_1.default.ReadVector(array);
             this.LocalRotation = MuBitConverter_1.default.ReadQuaternion(array);

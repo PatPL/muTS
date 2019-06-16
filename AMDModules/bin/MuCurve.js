@@ -10,6 +10,10 @@ define(["require", "exports", "./MuBitConverter", "./MuKey"], function (require,
         constructor(array) {
             this.WrapMode = [0, 0];
             this.Keys = [];
+            if (window.muTSlog) {
+                console.log(`Reading MuCurve @${array.offset}`);
+            }
+            ;
             this.Path = MuBitConverter_1.default.ReadString(array);
             this.Property = MuBitConverter_1.default.ReadString(array);
             this.Type = MuBitConverter_1.default.ReadInt(array);

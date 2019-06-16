@@ -5,6 +5,8 @@ class MuMatTex {
     public Offset: [number, number] = [0, 0];
     
     constructor (array: IMuBinary) {
+        if ((window as any).muTSlog) { console.log (`Reading MuMatTex @${array.offset}`) };
+        
         this.Index = MuBitConverter.ReadInt (array);
         this.Scale[0] = MuBitConverter.ReadFloat (array);
         this.Scale[1] = MuBitConverter.ReadFloat (array);

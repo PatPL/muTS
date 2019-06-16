@@ -1,1 +1,1 @@
-{"version":3,"file":"MuCollider.d.ts","sourceRoot":"","sources":["../../source/MuColliders/MuCollider.ts"],"names":[],"mappings":"AAMA,OAAO,SAAS,MAAM,cAAc,CAAC;AAErC,qBAAa,UAAU;WAEL,WAAW,CAAE,KAAK,EAAE,SAAS,EAAE,YAAY,EAAE,MAAM,GAAG,UAAU;IAkCvE,SAAS,CAAE,IAAI,EAAE,MAAM,EAAE;CAEnC"}
+{"version":3,"file":"MuCollider.d.ts","sourceRoot":"","sources":["../../source/MuColliders/MuCollider.ts"],"names":[],"mappings":"AAMA,OAAO,SAAS,MAAM,cAAc,CAAC;AAErC,qBAAa,UAAU;WAEL,WAAW,CAAE,KAAK,EAAE,SAAS,EAAE,YAAY,EAAE,MAAM,GAAG,UAAU;IAoCvE,SAAS,CAAE,IAAI,EAAE,MAAM,EAAE;CAEnC"}

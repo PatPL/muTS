@@ -9,6 +9,10 @@ define(["require", "exports", "../MuBitConverter", "../MuMesh", "../MuEnum"], fu
     class MuColliderMesh {
         constructor(array, isTwo) {
             this.IsTrigger = 0;
+            if (window.muTSlog) {
+                console.log(`Reading MuColliderMesh @${array.offset}`);
+            }
+            ;
             this.HasTrigger = isTwo;
             if (this.HasTrigger) {
                 this.IsTrigger = MuBitConverter_1.default.ReadByte(array);

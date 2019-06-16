@@ -7,6 +7,10 @@ define(["require", "exports", "./MuBitConverter"], function (require, exports, M
     MuBitConverter_1 = __importDefault(MuBitConverter_1);
     class MuTexture {
         constructor(array) {
+            if (window.muTSlog) {
+                console.log(`Reading MuTexture @${array.offset}`);
+            }
+            ;
             this.Name = MuBitConverter_1.default.ReadString(array);
             this.Type = MuBitConverter_1.default.ReadInt(array);
         }

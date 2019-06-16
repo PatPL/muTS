@@ -9,6 +9,10 @@ define(["require", "exports", "./MuBitConverter", "./MuEnum", "./MuClip"], funct
     class MuAnimation {
         constructor(array) {
             this.Clips = [];
+            if (window.muTSlog) {
+                console.log(`Reading MuAnimation @${array.offset}`);
+            }
+            ;
             let ClipCount = MuBitConverter_1.default.ReadInt(array);
             for (let i = 0; i < ClipCount; ++i) {
                 this.Clips.push(new MuClip_1.default(array));

@@ -8,6 +8,10 @@ define(["require", "exports", "./MuBitConverter", "./MuEnum"], function (require
     class MuCamera {
         constructor(array) {
             this.BackgroundColor = [0, 0, 0, 0];
+            if (window.muTSlog) {
+                console.log(`Reading MuCamera @${array.offset}`);
+            }
+            ;
             this.ClearFlags = MuBitConverter_1.default.ReadInt(array);
             this.BackgroundColor[0] = MuBitConverter_1.default.ReadFloat(array);
             this.BackgroundColor[1] = MuBitConverter_1.default.ReadFloat(array);

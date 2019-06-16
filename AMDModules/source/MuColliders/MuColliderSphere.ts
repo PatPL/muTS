@@ -10,6 +10,8 @@ export default class MuColliderSphere {
     public Center: [number, number, number];
     
     constructor (array: IMuBinary, isTwo: boolean) {
+        if ((window as any).muTSlog) { console.log (`Reading MuColliderSphere @${array.offset}`) };
+        
         this.HasTrigger = isTwo;
         if (this.HasTrigger) {
             this.IsTrigger = MuBitConverter.ReadByte (array);

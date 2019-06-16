@@ -7,6 +7,10 @@ define(["require", "exports", "./MuBitConverter"], function (require, exports, M
     MuBitConverter_1 = __importDefault(MuBitConverter_1);
     class MuFriction {
         constructor(array) {
+            if (window.muTSlog) {
+                console.log(`Reading MuFriction @${array.offset}`);
+            }
+            ;
             this.ExtremumSlip = MuBitConverter_1.default.ReadFloat(array);
             this.ExtremumValue = MuBitConverter_1.default.ReadFloat(array);
             this.AsymptoteSlip = MuBitConverter_1.default.ReadFloat(array);

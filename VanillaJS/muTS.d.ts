@@ -198,7 +198,6 @@ declare class MuMaterial {
     constructor(array: IMuBinary);
     Serialize(data: number[]): void;
 }
-declare type BindPose = [number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number];
 declare class MuMesh {
     Vertices: [number, number, number][];
     UVs: [number, number][];
@@ -212,6 +211,7 @@ declare class MuMesh {
     constructor(array: IMuBinary);
     Serialize(data: number[]): void;
 }
+declare type BindPose = [number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number];
 declare class MuObject {
     Materials: MuMaterial[];
     Textures: MuTexture[];
@@ -229,7 +229,6 @@ declare class MuObject {
     constructor(array: IMuBinary);
     Serialize(data: number[]): void;
 }
-declare type ColorAnimation = [[number, number, number, number], [number, number, number, number], [number, number, number, number], [number, number, number, number], [number, number, number, number]];
 declare class MuParticles {
     Emit: number;
     Shape: number;
@@ -267,6 +266,7 @@ declare class MuParticles {
     constructor(array: IMuBinary);
     Serialize(data: number[]): void;
 }
+declare type ColorAnimation = [[number, number, number, number], [number, number, number, number], [number, number, number, number], [number, number, number, number], [number, number, number, number]];
 declare class MuRenderer {
     CastShadows: number;
     ReceiveShadows: number;

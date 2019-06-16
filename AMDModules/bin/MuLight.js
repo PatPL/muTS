@@ -9,6 +9,10 @@ define(["require", "exports", "./MuBitConverter", "./MuEnum"], function (require
         constructor(array) {
             this.Color = [0, 0, 0, 0];
             this.SpotAngle = 0;
+            if (window.muTSlog) {
+                console.log(`Reading MuLight @${array.offset}`);
+            }
+            ;
             this.Type = MuBitConverter_1.default.ReadInt(array);
             this.Intensity = MuBitConverter_1.default.ReadFloat(array);
             this.Range = MuBitConverter_1.default.ReadFloat(array);

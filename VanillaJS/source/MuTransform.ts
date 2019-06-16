@@ -6,6 +6,8 @@ class MuTransform {
     public LocalScale: [number, number, number];
     
     constructor (array: IMuBinary) {
+        if ((window as any).muTSlog) { console.log (`Reading MuTransform @${array.offset}`) };
+        
         this.Name = MuBitConverter.ReadString (array);
         this.LocalPosition = MuBitConverter.ReadVector (array);
         this.LocalRotation = MuBitConverter.ReadQuaternion (array);

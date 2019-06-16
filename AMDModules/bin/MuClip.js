@@ -9,6 +9,10 @@ define(["require", "exports", "./MuBitConverter", "./MuCurve"], function (requir
     class MuClip {
         constructor(array) {
             this.Curves = [];
+            if (window.muTSlog) {
+                console.log(`Reading MuClip @${array.offset}`);
+            }
+            ;
             this.Name = MuBitConverter_1.default.ReadString(array);
             this.lbCenter = MuBitConverter_1.default.ReadVector(array);
             this.lbSize = MuBitConverter_1.default.ReadVector(array);

@@ -1,11 +1,3 @@
-// (16 floats tuple) array
-type BindPose = [
-    number, number, number, number,
-    number, number, number, number,
-    number, number, number, number,
-    number, number, number, number
-];
-
 class MuMesh {
     
     public Vertices: [number, number, number][] = [];
@@ -19,10 +11,12 @@ class MuMesh {
     public Colors: [number, number, number, number][] = [];
     
     constructor (array: IMuBinary) {
+        if ((window as any).muTSlog) { console.log (`Reading MuMesh @${array.offset}`) };
+        
         let start = MuBitConverter.ReadInt (array);
         if (start != MuEnum.ET_MESH_START) {
-            console.error ("This shouldn't happen. Is the mu file corrupted?");
-            throw `Unexpected value spotted @${array.offset}`;
+            console.error ("This shouldn't ever happen. Is the file corrupted?");
+            throw `Expected a MeshStartValue here (${MuEnum.ET_MESH_START}), but got (${start}) instead @${array.offset}`;
         }
         
         let VerticleCount = MuBitConverter.ReadInt (array);
@@ -34,16 +28,19 @@ class MuMesh {
             
             switch (Type) {
                 case MuEnum.ET_MESH_END:
+                if ((window as any).muTSlog) { console.log (`MuMesh END @${array.offset}`) };
                 // Break while loop
                 break MeshLoop;
                 
                 case MuEnum.ET_MESH_VERTS:
+                if ((window as any).muTSlog) { console.log (`Reading MuMesh-Verticles (${VerticleCount} of them) @${array.offset}`) };
                 for (let i = 0; i < VerticleCount; ++i) {
                     this.Vertices.push (MuBitConverter.ReadVector (array));
                 }
                 break;
                 
                 case MuEnum.ET_MESH_UV:
+                if ((window as any).muTSlog) { console.log (`Reading MuMesh-UV (${VerticleCount} of them) @${array.offset}`) };
                 for (let i = 0; i < VerticleCount; ++i) {
                     let x = MuBitConverter.ReadFloat (array);
                     let y = MuBitConverter.ReadFloat (array);
@@ -52,6 +49,7 @@ class MuMesh {
                 break;
                 
                 case MuEnum.ET_MESH_UV2:
+                if ((window as any).muTSlog) { console.log (`Reading MuMesh-UV2 (${VerticleCount} of them) @${array.offset}`) };
                 for (let i = 0; i < VerticleCount; ++i) {
                     let x = MuBitConverter.ReadFloat (array);
                     let y = MuBitConverter.ReadFloat (array);
@@ -60,25 +58,34 @@ class MuMesh {
                 break;
                 
                 case MuEnum.ET_MESH_NORMALS:
+                if ((window as any).muTSlog) { console.log (`Reading MuMesh-Normals (${VerticleCount} of them) @${array.offset}`) };
                 for (let i = 0; i < VerticleCount; ++i) {
                     this.Normals.push (MuBitConverter.ReadVector (array));
                 }
                 break;
                 
                 case MuEnum.ET_MESH_TANGENTS:
+                if ((window as any).muTSlog) { console.log (`Reading MuMesh-Tangents (${VerticleCount} of them) @${array.offset}`) };
                 for (let i = 0; i < VerticleCount; ++i) {
                     this.Tangents.push (MuBitConverter.ReadTangent (array));
                 }
                 break;
                 
                 case MuEnum.ET_MESH_BONE_WEIGHTS:
+                if ((window as any).muTSlog) { console.log (`Reading MuMesh-BoneWeights (${VerticleCount} of them) @${array.offset}`) };
                 for (let i = 0; i < VerticleCount; ++i) {
                     this.BoneWeights.push (new MuBoneWeight (array));
                 }
                 break;
                 
                 case MuEnum.ET_MESH_BIND_POSES:
-                for (let i = 0; i < VerticleCount; ++i) {
+                if ((window as any).muTSlog) { console.log (`Reading MuMesh-BindPoses (I'll tell you how many of them in a second) @${array.offset}`) };
+                
+                let BindPoseCount = MuBitConverter.ReadInt (array);
+                
+                if ((window as any).muTSlog) { console.log (`There are ${BindPoseCount} bind poses to read`) };
+                
+                for (let i = 0; i < BindPoseCount; ++i) {
                     let pose: BindPose = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                     
                     // 16 floats
@@ -91,11 +98,13 @@ class MuMesh {
                 break;
                 
                 case MuEnum.ET_MESH_TRIANGLES:
+                if ((window as any).muTSlog) { console.log (`Reading MuMesh-Triangles (${VerticleCount} of them) @${array.offset}`) };
                 let TriangleCount = MuBitConverter.ReadInt (array);
                 let Triangles: [number, number, number][] = [];
                 
                 if (TriangleCount % 3 != 0) {
-                    console.warn ("Is this guaranteed?");
+                    console.warn ("Is this guaranteed? Apparently not.");
+                    console.warn ("Length of the array with triangles is not a multiple of 3. Will try to continue anyway. Mesh might be corrupted though.");
                 }
                 
                 for (let i = 0; i < TriangleCount / 3; ++i) {
@@ -115,13 +124,14 @@ class MuMesh {
                 break;
                 
                 case MuEnum.ET_MESH_VERTEX_COLORS:
+                if ((window as any).muTSlog) { console.log (`Reading MuMesh-VertexColors (${VerticleCount} of them) @${array.offset}`) };
                 for (let i = 0; i < VerticleCount; ++i) {
                     this.Colors.push (MuBitConverter.ReadColor (array));
                 }
                 break;
                 
                 default:
-                throw `Incorrect mesh value type: ${Type} @${array.offset}`;
+                throw `Unknown mesh value type: ${Type} @${array.offset}`;
             }
         }
     }
@@ -209,3 +219,11 @@ class MuMesh {
     }
     
 }
+
+// (16 floats tuple) array
+type BindPose = [
+    number, number, number, number,
+    number, number, number, number,
+    number, number, number, number,
+    number, number, number, number
+];

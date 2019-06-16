@@ -6,13 +6,21 @@ class Mu {
             offset: 0,
             version: 0
         };
+        if (window.muTSlog) {
+            console.log(`Reading Mu @${array.offset}`);
+        }
+        ;
         this.Magic = MuBitConverter.ReadInt(array);
         this.Version = MuBitConverter.ReadInt(array);
         array.version = this.Version;
-        if (this.Magic != MuEnum.MODEL_BINARY ||
-            this.Version < 0 ||
-            this.Version > MuEnum.FILE_VERSION) {
-            throw `Errors found in mu file @${array.offset}`;
+        if (this.Magic != MuEnum.MODEL_BINARY) {
+            throw `Incorrect magic value. Is this really a .mu file? @${array.offset}`;
+        }
+        else if (this.Version < 0) {
+            throw `File version is lower than 0. Is the file corrupted? @${array.offset}`;
+        }
+        else if (this.Version > MuEnum.FILE_VERSION) {
+            throw `File version (${this.Version}) is higher than the highest supported version (${MuEnum.FILE_VERSION}). @${array.offset}`;
         }
         this.Name = MuBitConverter.ReadString(array);
         this.Object = new MuObject(array);
@@ -29,6 +37,10 @@ class Mu {
 class MuAnimation {
     constructor(array) {
         this.Clips = [];
+        if (window.muTSlog) {
+            console.log(`Reading MuAnimation @${array.offset}`);
+        }
+        ;
         let ClipCount = MuBitConverter.ReadInt(array);
         for (let i = 0; i < ClipCount; ++i) {
             this.Clips.push(new MuClip(array));
@@ -49,13 +61,13 @@ class MuAnimation {
 class MuBitConverter {
     static ReadByte(array) {
         if (array.data.length < array.offset + 1) {
-            throw `EOF @${array.offset}`;
+            throw `Premature EOF @${array.offset} in ReadByte`;
         }
         return array.data[array.offset++];
     }
     static ReadInt(array) {
         if (array.data.length < array.offset + 4) {
-            throw `EOF @${array.offset}`;
+            throw `Premature EOF @${array.offset} in ReadInt`;
         }
         let output = 0;
         output += array.data[array.offset++];
@@ -79,7 +91,7 @@ class MuBitConverter {
     }
     static ReadUInt(array) {
         if (array.data.length < array.offset + 4) {
-            throw `EOF @${array.offset}`;
+            throw `Premature EOF @${array.offset} in ReadUInt`;
         }
         let output = 0;
         output += (array.data[array.offset++]) >>> 0;
@@ -114,6 +126,9 @@ class MuBitConverter {
         return [x, z, y, -w];
     }
     static ReadColor(array) {
+        if (array.data.length < array.offset + 4) {
+            throw `Premature EOF @${array.offset} in ReadColor`;
+        }
         let r = array.data[array.offset++] / 255;
         let g = array.data[array.offset++] / 255;
         let b = array.data[array.offset++] / 255;
@@ -122,7 +137,7 @@ class MuBitConverter {
     }
     static ReadBytes(array, length) {
         if (array.data.length < array.offset + length) {
-            throw `EOF @${array.offset}`;
+            throw `Premature EOF @${array.offset} in ReadBytes`;
         }
         array.offset += length;
         return array.data.slice(array.offset - length, array.offset);
@@ -235,6 +250,10 @@ class MuBoneWeight {
 class MuCamera {
     constructor(array) {
         this.BackgroundColor = [0, 0, 0, 0];
+        if (window.muTSlog) {
+            console.log(`Reading MuCamera @${array.offset}`);
+        }
+        ;
         this.ClearFlags = MuBitConverter.ReadInt(array);
         this.BackgroundColor[0] = MuBitConverter.ReadFloat(array);
         this.BackgroundColor[1] = MuBitConverter.ReadFloat(array);
@@ -265,6 +284,10 @@ class MuCamera {
 class MuClip {
     constructor(array) {
         this.Curves = [];
+        if (window.muTSlog) {
+            console.log(`Reading MuClip @${array.offset}`);
+        }
+        ;
         this.Name = MuBitConverter.ReadString(array);
         this.lbCenter = MuBitConverter.ReadVector(array);
         this.lbSize = MuBitConverter.ReadVector(array);
@@ -289,6 +312,10 @@ class MuCurve {
     constructor(array) {
         this.WrapMode = [0, 0];
         this.Keys = [];
+        if (window.muTSlog) {
+            console.log(`Reading MuCurve @${array.offset}`);
+        }
+        ;
         this.Path = MuBitConverter.ReadString(array);
         this.Property = MuBitConverter.ReadString(array);
         this.Type = MuBitConverter.ReadInt(array);
@@ -378,6 +405,10 @@ var MuEnum;
 })(MuEnum || (MuEnum = {}));
 class MuFriction {
     constructor(array) {
+        if (window.muTSlog) {
+            console.log(`Reading MuFriction @${array.offset}`);
+        }
+        ;
         this.ExtremumSlip = MuBitConverter.ReadFloat(array);
         this.ExtremumValue = MuBitConverter.ReadFloat(array);
         this.AsymptoteSlip = MuBitConverter.ReadFloat(array);
@@ -395,6 +426,10 @@ class MuFriction {
 class MuKey {
     constructor(array) {
         this.Tangent = [0, 0];
+        if (window.muTSlog) {
+            console.log(`Reading MuKey @${array.offset}`);
+        }
+        ;
         this.Time = MuBitConverter.ReadFloat(array);
         this.Value = MuBitConverter.ReadFloat(array);
         this.Tangent[0] = MuBitConverter.ReadFloat(array);
@@ -413,6 +448,10 @@ class MuLight {
     constructor(array) {
         this.Color = [0, 0, 0, 0];
         this.SpotAngle = 0;
+        if (window.muTSlog) {
+            console.log(`Reading MuLight @${array.offset}`);
+        }
+        ;
         this.Type = MuBitConverter.ReadInt(array);
         this.Intensity = MuBitConverter.ReadFloat(array);
         this.Range = MuBitConverter.ReadFloat(array);
@@ -442,6 +481,10 @@ class MuMatTex {
     constructor(array) {
         this.Scale = [0, 0];
         this.Offset = [0, 0];
+        if (window.muTSlog) {
+            console.log(`Reading MuMatTex @${array.offset}`);
+        }
+        ;
         this.Index = MuBitConverter.ReadInt(array);
         this.Scale[0] = MuBitConverter.ReadFloat(array);
         this.Scale[1] = MuBitConverter.ReadFloat(array);
@@ -463,6 +506,10 @@ class MuMaterial {
         this.FloatProperties2 = {};
         this.FloatProperties3 = {};
         this.TextureProperties = {};
+        if (window.muTSlog) {
+            console.log(`Reading MuMaterial @${array.offset}`);
+        }
+        ;
         if (array.version >= 4) {
             this.Name = MuBitConverter.ReadString(array);
             this.ShaderName = MuBitConverter.ReadString(array);
@@ -496,7 +543,7 @@ class MuMaterial {
                         this.TextureProperties[PropertyName] = new MuMatTex(array);
                         break;
                     default:
-                        console.warn(`This shouldn't happen. Invalid property type: ${PropertyType}`);
+                        console.warn(`Invalid property type: ${PropertyType}. Skipping.`);
                         break;
                 }
             }
@@ -615,7 +662,7 @@ class MuMaterial {
                     this.TextureProperties["_MainTex"] = new MuMatTex(array);
                     break;
                 default:
-                    throw `Wrong material type: ${Type} @${array.offset}`;
+                    throw `Unknown material type: ${Type} @${array.offset}`;
             }
         }
     }
@@ -690,10 +737,14 @@ class MuMesh {
         this.BindPoses = [];
         this.Submeshes = [];
         this.Colors = [];
+        if (window.muTSlog) {
+            console.log(`Reading MuMesh @${array.offset}`);
+        }
+        ;
         let start = MuBitConverter.ReadInt(array);
         if (start != MuEnum.ET_MESH_START) {
-            console.error("This shouldn't happen. Is the mu file corrupted?");
-            throw `Unexpected value spotted @${array.offset}`;
+            console.error("This shouldn't ever happen. Is the file corrupted?");
+            throw `Expected a MeshStartValue here (${MuEnum.ET_MESH_START}), but got (${start}) instead @${array.offset}`;
         }
         let VerticleCount = MuBitConverter.ReadInt(array);
         let SubmeshCount = MuBitConverter.ReadInt(array);
@@ -701,13 +752,25 @@ class MuMesh {
             let Type = MuBitConverter.ReadInt(array);
             switch (Type) {
                 case MuEnum.ET_MESH_END:
+                    if (window.muTSlog) {
+                        console.log(`MuMesh END @${array.offset}`);
+                    }
+                    ;
                     break MeshLoop;
                 case MuEnum.ET_MESH_VERTS:
+                    if (window.muTSlog) {
+                        console.log(`Reading MuMesh-Verticles (${VerticleCount} of them) @${array.offset}`);
+                    }
+                    ;
                     for (let i = 0; i < VerticleCount; ++i) {
                         this.Vertices.push(MuBitConverter.ReadVector(array));
                     }
                     break;
                 case MuEnum.ET_MESH_UV:
+                    if (window.muTSlog) {
+                        console.log(`Reading MuMesh-UV (${VerticleCount} of them) @${array.offset}`);
+                    }
+                    ;
                     for (let i = 0; i < VerticleCount; ++i) {
                         let x = MuBitConverter.ReadFloat(array);
                         let y = MuBitConverter.ReadFloat(array);
@@ -715,6 +778,10 @@ class MuMesh {
                     }
                     break;
                 case MuEnum.ET_MESH_UV2:
+                    if (window.muTSlog) {
+                        console.log(`Reading MuMesh-UV2 (${VerticleCount} of them) @${array.offset}`);
+                    }
+                    ;
                     for (let i = 0; i < VerticleCount; ++i) {
                         let x = MuBitConverter.ReadFloat(array);
                         let y = MuBitConverter.ReadFloat(array);
@@ -722,22 +789,43 @@ class MuMesh {
                     }
                     break;
                 case MuEnum.ET_MESH_NORMALS:
+                    if (window.muTSlog) {
+                        console.log(`Reading MuMesh-Normals (${VerticleCount} of them) @${array.offset}`);
+                    }
+                    ;
                     for (let i = 0; i < VerticleCount; ++i) {
                         this.Normals.push(MuBitConverter.ReadVector(array));
                     }
                     break;
                 case MuEnum.ET_MESH_TANGENTS:
+                    if (window.muTSlog) {
+                        console.log(`Reading MuMesh-Tangents (${VerticleCount} of them) @${array.offset}`);
+                    }
+                    ;
                     for (let i = 0; i < VerticleCount; ++i) {
                         this.Tangents.push(MuBitConverter.ReadTangent(array));
                     }
                     break;
                 case MuEnum.ET_MESH_BONE_WEIGHTS:
+                    if (window.muTSlog) {
+                        console.log(`Reading MuMesh-BoneWeights (${VerticleCount} of them) @${array.offset}`);
+                    }
+                    ;
                     for (let i = 0; i < VerticleCount; ++i) {
                         this.BoneWeights.push(new MuBoneWeight(array));
                     }
                     break;
                 case MuEnum.ET_MESH_BIND_POSES:
-                    for (let i = 0; i < VerticleCount; ++i) {
+                    if (window.muTSlog) {
+                        console.log(`Reading MuMesh-BindPoses (I'll tell you how many of them in a second) @${array.offset}`);
+                    }
+                    ;
+                    let BindPoseCount = MuBitConverter.ReadInt(array);
+                    if (window.muTSlog) {
+                        console.log(`There are ${BindPoseCount} bind poses to read`);
+                    }
+                    ;
+                    for (let i = 0; i < BindPoseCount; ++i) {
                         let pose = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                         for (let i = 0; i < 16; ++i) {
                             pose[i] = MuBitConverter.ReadFloat(array);
@@ -746,10 +834,15 @@ class MuMesh {
                     }
                     break;
                 case MuEnum.ET_MESH_TRIANGLES:
+                    if (window.muTSlog) {
+                        console.log(`Reading MuMesh-Triangles (${VerticleCount} of them) @${array.offset}`);
+                    }
+                    ;
                     let TriangleCount = MuBitConverter.ReadInt(array);
                     let Triangles = [];
                     if (TriangleCount % 3 != 0) {
-                        console.warn("Is this guaranteed?");
+                        console.warn("Is this guaranteed? Apparently not.");
+                        console.warn("Length of the array with triangles is not a multiple of 3. Will try to continue anyway. Mesh might be corrupted though.");
                     }
                     for (let i = 0; i < TriangleCount / 3; ++i) {
                         let x = MuBitConverter.ReadInt(array);
@@ -765,12 +858,16 @@ class MuMesh {
                     this.Submeshes.push(Triangles);
                     break;
                 case MuEnum.ET_MESH_VERTEX_COLORS:
+                    if (window.muTSlog) {
+                        console.log(`Reading MuMesh-VertexColors (${VerticleCount} of them) @${array.offset}`);
+                    }
+                    ;
                     for (let i = 0; i < VerticleCount; ++i) {
                         this.Colors.push(MuBitConverter.ReadColor(array));
                     }
                     break;
                 default:
-                    throw `Incorrect mesh value type: ${Type} @${array.offset}`;
+                    throw `Unknown mesh value type: ${Type} @${array.offset}`;
             }
         }
     }
@@ -847,6 +944,10 @@ class MuObject {
         this.Materials = [];
         this.Textures = [];
         this.Children = [];
+        if (window.muTSlog) {
+            console.log(`Reading MuObject @${array.offset}`);
+        }
+        ;
         this.Transform = new MuTransform(array);
         MainLoop: while (true) {
             let EntryType;
@@ -982,6 +1083,10 @@ class MuParticles {
             [0, 0, 0, 0]
         ];
         this.UVAnimation = [0, 0, 0];
+        if (window.muTSlog) {
+            console.log(`Reading MuParticles @${array.offset}`);
+        }
+        ;
         this.Emit = MuBitConverter.ReadByte(array);
         this.Shape = MuBitConverter.ReadInt(array);
         this.Shape3D = MuBitConverter.ReadVector(array);
@@ -1083,6 +1188,10 @@ class MuRenderer {
         this.CastShadows = 1;
         this.ReceiveShadows = 1;
         this.Materials = [];
+        if (window.muTSlog) {
+            console.log(`Reading MuRenderer @${array.offset}`);
+        }
+        ;
         if (array.version > 0) {
             this.CastShadows = MuBitConverter.ReadByte(array);
             this.ReceiveShadows = MuBitConverter.ReadByte(array);
@@ -1106,6 +1215,10 @@ class MuSkinnedMeshRenderer {
     constructor(array) {
         this.Materials = [];
         this.Bones = [];
+        if (window.muTSlog) {
+            console.log(`Reading MuSkinnedMeshRenderer @${array.offset}`);
+        }
+        ;
         let MaterialCount = MuBitConverter.ReadInt(array);
         for (let i = 0; i < MaterialCount; ++i) {
             this.Materials.push(MuBitConverter.ReadInt(array));
@@ -1139,6 +1252,10 @@ class MuSkinnedMeshRenderer {
 }
 class MuSpring {
     constructor(array) {
+        if (window.muTSlog) {
+            console.log(`Reading MuSpring @${array.offset}`);
+        }
+        ;
         this.Spring = MuBitConverter.ReadFloat(array);
         this.Damper = MuBitConverter.ReadFloat(array);
         this.TargetPosition = MuBitConverter.ReadFloat(array);
@@ -1151,6 +1268,10 @@ class MuSpring {
 }
 class MuTagLayer {
     constructor(array) {
+        if (window.muTSlog) {
+            console.log(`Reading MuTagLayer @${array.offset}`);
+        }
+        ;
         this.Tag = MuBitConverter.ReadString(array);
         this.Layer = MuBitConverter.ReadInt(array);
     }
@@ -1162,6 +1283,10 @@ class MuTagLayer {
 }
 class MuTexture {
     constructor(array) {
+        if (window.muTSlog) {
+            console.log(`Reading MuTexture @${array.offset}`);
+        }
+        ;
         this.Name = MuBitConverter.ReadString(array);
         this.Type = MuBitConverter.ReadInt(array);
     }
@@ -1172,6 +1297,10 @@ class MuTexture {
 }
 class MuTransform {
     constructor(array) {
+        if (window.muTSlog) {
+            console.log(`Reading MuTransform @${array.offset}`);
+        }
+        ;
         this.Name = MuBitConverter.ReadString(array);
         this.LocalPosition = MuBitConverter.ReadVector(array);
         this.LocalRotation = MuBitConverter.ReadQuaternion(array);
@@ -1186,6 +1315,10 @@ class MuTransform {
 }
 class MuCollider {
     static GetCollider(array, colliderType) {
+        if (window.muTSlog) {
+            console.log(`Redirecting to correct MuCollider @${array.offset}`);
+        }
+        ;
         switch (colliderType) {
             case MuEnum.ET_MESH_COLLIDER:
                 return new MuColliderMesh(array, false);
@@ -1215,6 +1348,10 @@ class MuCollider {
 class MuColliderBox {
     constructor(array, isTwo) {
         this.IsTrigger = 0;
+        if (window.muTSlog) {
+            console.log(`Reading MuColliderBox @${array.offset}`);
+        }
+        ;
         this.HasTrigger = isTwo;
         if (this.HasTrigger) {
             this.IsTrigger = MuBitConverter.ReadByte(array);
@@ -1237,6 +1374,10 @@ class MuColliderBox {
 class MuColliderCapsule {
     constructor(array, isTwo) {
         this.IsTrigger = 0;
+        if (window.muTSlog) {
+            console.log(`Reading MuColliderCapsule @${array.offset}`);
+        }
+        ;
         this.HasTrigger = isTwo;
         if (this.HasTrigger) {
             this.IsTrigger = MuBitConverter.ReadByte(array);
@@ -1263,6 +1404,10 @@ class MuColliderCapsule {
 class MuColliderMesh {
     constructor(array, isTwo) {
         this.IsTrigger = 0;
+        if (window.muTSlog) {
+            console.log(`Reading MuColliderMesh @${array.offset}`);
+        }
+        ;
         this.HasTrigger = isTwo;
         if (this.HasTrigger) {
             this.IsTrigger = MuBitConverter.ReadByte(array);
@@ -1285,6 +1430,10 @@ class MuColliderMesh {
 class MuColliderSphere {
     constructor(array, isTwo) {
         this.IsTrigger = 0;
+        if (window.muTSlog) {
+            console.log(`Reading MuColliderSphere @${array.offset}`);
+        }
+        ;
         this.HasTrigger = isTwo;
         if (this.HasTrigger) {
             this.IsTrigger = MuBitConverter.ReadByte(array);
@@ -1306,6 +1455,10 @@ class MuColliderSphere {
 }
 class MuColliderWheel {
     constructor(array) {
+        if (window.muTSlog) {
+            console.log(`Reading MuColliderWheel @${array.offset}`);
+        }
+        ;
         this.Mass = MuBitConverter.ReadFloat(array);
         this.Radius = MuBitConverter.ReadFloat(array);
         this.SuspensionDistance = MuBitConverter.ReadFloat(array);

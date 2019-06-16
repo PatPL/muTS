@@ -1,6 +1,5 @@
 import MuBoneWeight from "./MuBoneWeight";
 import IMuBinary from "./IMuBinary";
-declare type BindPose = [number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number];
 export default class MuMesh {
     Vertices: [number, number, number][];
     UVs: [number, number][];
@@ -14,5 +13,6 @@ export default class MuMesh {
     constructor(array: IMuBinary);
     Serialize(data: number[]): void;
 }
+declare type BindPose = [number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number];
 export {};
 //# sourceMappingURL=MuMesh.d.ts.map

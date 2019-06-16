@@ -4,13 +4,13 @@ define(["require", "exports"], function (require, exports) {
     class MuBitConverter {
         static ReadByte(array) {
             if (array.data.length < array.offset + 1) {
-                throw `EOF @${array.offset}`;
+                throw `Premature EOF @${array.offset} in ReadByte`;
             }
             return array.data[array.offset++];
         }
         static ReadInt(array) {
             if (array.data.length < array.offset + 4) {
-                throw `EOF @${array.offset}`;
+                throw `Premature EOF @${array.offset} in ReadInt`;
             }
             let output = 0;
             output += array.data[array.offset++];
@@ -34,7 +34,7 @@ define(["require", "exports"], function (require, exports) {
         }
         static ReadUInt(array) {
             if (array.data.length < array.offset + 4) {
-                throw `EOF @${array.offset}`;
+                throw `Premature EOF @${array.offset} in ReadUInt`;
             }
             let output = 0;
             output += (array.data[array.offset++]) >>> 0;
@@ -69,6 +69,9 @@ define(["require", "exports"], function (require, exports) {
             return [x, z, y, -w];
         }
         static ReadColor(array) {
+            if (array.data.length < array.offset + 4) {
+                throw `Premature EOF @${array.offset} in ReadColor`;
+            }
             let r = array.data[array.offset++] / 255;
             let g = array.data[array.offset++] / 255;
             let b = array.data[array.offset++] / 255;
@@ -77,7 +80,7 @@ define(["require", "exports"], function (require, exports) {
         }
         static ReadBytes(array, length) {
             if (array.data.length < array.offset + length) {
-                throw `EOF @${array.offset}`;
+                throw `Premature EOF @${array.offset} in ReadBytes`;
             }
             array.offset += length;
             return array.data.slice(array.offset - length, array.offset);

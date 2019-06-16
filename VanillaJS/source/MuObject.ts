@@ -16,6 +16,8 @@ class MuObject {
     public Light?: MuLight;
     
     constructor (array: IMuBinary) {
+        if ((window as any).muTSlog) { console.log (`Reading MuObject @${array.offset}`) };
+        
         this.Transform = new MuTransform (array);
         
         // This loops till data ends

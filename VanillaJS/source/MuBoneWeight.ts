@@ -4,6 +4,8 @@ class MuBoneWeight {
     public Weights: [number, number, number, number];
     
     constructor (array: IMuBinary) {
+        // This one shouldn't be logged per-instance. MuMesh already logs that this will be created x amount of times
+        // if ((window as any).muTSlog) { console.log (`Reading MuBoneWeight @${array.offset}`) };
         let I1 = MuBitConverter.ReadInt (array);
         let W1 = MuBitConverter.ReadFloat (array);
         let I2 = MuBitConverter.ReadInt (array);

@@ -34,6 +34,8 @@ export default class MuMaterial {
     public ShaderName: string;
     
     constructor (array: IMuBinary) {
+        if ((window as any).muTSlog) { console.log (`Reading MuMaterial @${array.offset}`) };
+        
         if (array.version >= 4) {
             // Version 4+
             this.Name = MuBitConverter.ReadString (array);
@@ -74,8 +76,8 @@ export default class MuMaterial {
                     break;
                     
                     default:
-                    // Original code does nothing here.
-                    console.warn (`This shouldn't happen. Invalid property type: ${PropertyType}`);
+                    // Original code does nothing in case of unknown property type.
+                    console.warn (`Invalid property type: ${PropertyType}. Skipping.`);
                     break;
                 }
             }
@@ -208,7 +210,7 @@ export default class MuMaterial {
                 break;
                 
                 default:
-                throw `Wrong material type: ${Type} @${array.offset}`;
+                throw `Unknown material type: ${Type} @${array.offset}`;
             }
         }
     }

@@ -8,6 +8,10 @@ define(["require", "exports", "../MuBitConverter", "../MuEnum"], function (requi
     class MuColliderBox {
         constructor(array, isTwo) {
             this.IsTrigger = 0;
+            if (window.muTSlog) {
+                console.log(`Reading MuColliderBox @${array.offset}`);
+            }
+            ;
             this.HasTrigger = isTwo;
             if (this.HasTrigger) {
                 this.IsTrigger = MuBitConverter_1.default.ReadByte(array);

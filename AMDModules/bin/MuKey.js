@@ -8,6 +8,10 @@ define(["require", "exports", "./MuBitConverter"], function (require, exports, M
     class MuKey {
         constructor(array) {
             this.Tangent = [0, 0];
+            if (window.muTSlog) {
+                console.log(`Reading MuKey @${array.offset}`);
+            }
+            ;
             this.Time = MuBitConverter_1.default.ReadFloat(array);
             this.Value = MuBitConverter_1.default.ReadFloat(array);
             this.Tangent[0] = MuBitConverter_1.default.ReadFloat(array);

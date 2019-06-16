@@ -21,6 +21,10 @@ define(["require", "exports", "./MuTransform", "./MuBitConverter", "./MuEnum", "
             this.Materials = [];
             this.Textures = [];
             this.Children = [];
+            if (window.muTSlog) {
+                console.log(`Reading MuObject @${array.offset}`);
+            }
+            ;
             this.Transform = new MuTransform_1.default(array);
             MainLoop: while (true) {
                 let EntryType;

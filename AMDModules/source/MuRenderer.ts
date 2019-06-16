@@ -9,6 +9,8 @@ export default class MuRenderer {
     public Materials: number[] = [];
     
     constructor (array: IMuBinary) {
+        if ((window as any).muTSlog) { console.log (`Reading MuRenderer @${array.offset}`) };
+        
         if (array.version > 0) {
             this.CastShadows = MuBitConverter.ReadByte (array);
             this.ReceiveShadows = MuBitConverter.ReadByte (array);

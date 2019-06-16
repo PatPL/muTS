@@ -8,6 +8,8 @@ class MuClip {
     public WrapMode: number;
     
     constructor (array: IMuBinary) {
+        if ((window as any).muTSlog) { console.log (`Reading MuClip @${array.offset}`) };
+        
         this.Name = MuBitConverter.ReadString (array);
         this.lbCenter = MuBitConverter.ReadVector (array);
         this.lbSize = MuBitConverter.ReadVector (array);

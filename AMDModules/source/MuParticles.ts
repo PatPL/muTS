@@ -1,14 +1,6 @@
 import IMuBinary from "./IMuBinary";
 import MuBitConverter from "./MuBitConverter";
 
-type ColorAnimation = [
-    [number, number, number, number],
-    [number, number, number, number],
-    [number, number, number, number],
-    [number, number, number, number],
-    [number, number, number, number]
-];
-
 export default class MuParticles {
     
     // I'll port             |                    
@@ -60,6 +52,8 @@ export default class MuParticles {
     public Count: number;
     
     constructor (array: IMuBinary) {
+        if ((window as any).muTSlog) { console.log (`Reading MuParticles @${array.offset}`) };
+        
         this.Emit = MuBitConverter.ReadByte (array);
         this.Shape = MuBitConverter.ReadInt (array);
         this.Shape3D = MuBitConverter.ReadVector (array);
@@ -158,3 +152,11 @@ export default class MuParticles {
     }
         
 }
+
+type ColorAnimation = [
+    [number, number, number, number],
+    [number, number, number, number],
+    [number, number, number, number],
+    [number, number, number, number],
+    [number, number, number, number]
+];

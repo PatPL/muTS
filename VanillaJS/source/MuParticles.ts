@@ -1,11 +1,3 @@
-type ColorAnimation = [
-    [number, number, number, number],
-    [number, number, number, number],
-    [number, number, number, number],
-    [number, number, number, number],
-    [number, number, number, number]
-];
-
 class MuParticles {
     
     // I'll port             |                    
@@ -57,6 +49,8 @@ class MuParticles {
     public Count: number;
     
     constructor (array: IMuBinary) {
+        if ((window as any).muTSlog) { console.log (`Reading MuParticles @${array.offset}`) };
+        
         this.Emit = MuBitConverter.ReadByte (array);
         this.Shape = MuBitConverter.ReadInt (array);
         this.Shape3D = MuBitConverter.ReadVector (array);
@@ -155,3 +149,11 @@ class MuParticles {
     }
         
 }
+
+type ColorAnimation = [
+    [number, number, number, number],
+    [number, number, number, number],
+    [number, number, number, number],
+    [number, number, number, number],
+    [number, number, number, number]
+];
