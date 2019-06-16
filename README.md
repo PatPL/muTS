@@ -1,6 +1,9 @@
 # muTS
 Typescript/Javascript KSP MU reader/writer, based on https://github.com/taniwha/io_object_mu
 
+### Try it out right now in browser:
+https://patpl.github.io/muTS/
+
 ## Installation:
 
 ### No module resolution:
