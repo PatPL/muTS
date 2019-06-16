@@ -10,6 +10,8 @@ class MuCamera {
     public Depth: number;
     
     constructor (array: IMuBinary) {
+        if ((window as any).muTSlog) { console.log (`Reading MuCamera @${array.offset}`) };
+        
         this.ClearFlags = MuBitConverter.ReadInt (array);
         this.BackgroundColor[0] = MuBitConverter.ReadFloat (array);
         this.BackgroundColor[1] = MuBitConverter.ReadFloat (array);

@@ -7,6 +7,8 @@ class MuFriction {
     public Stiffness: number;
     
     constructor (array: IMuBinary) {
+        if ((window as any).muTSlog) { console.log (`Reading MuFriction @${array.offset}`) };
+        
         this.ExtremumSlip = MuBitConverter.ReadFloat (array);
         this.ExtremumValue = MuBitConverter.ReadFloat (array);
         this.AsymptoteSlip = MuBitConverter.ReadFloat (array);

@@ -21,5 +21,5 @@ requirejs (["AMDModules/bin/Mu.js"], function (_mu) {
         }
         
         reader.readAsArrayBuffer (FileInputElement.files[0]);
-    })
+    });
 });

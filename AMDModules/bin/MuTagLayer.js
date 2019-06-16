@@ -7,6 +7,10 @@ define(["require", "exports", "./MuBitConverter", "./MuEnum"], function (require
     MuBitConverter_1 = __importDefault(MuBitConverter_1);
     class MuTagLayer {
         constructor(array) {
+            if (window.muTSlog) {
+                console.log(`Reading MuTagLayer @${array.offset}`);
+            }
+            ;
             this.Tag = MuBitConverter_1.default.ReadString(array);
             this.Layer = MuBitConverter_1.default.ReadInt(array);
         }

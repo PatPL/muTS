@@ -9,6 +9,8 @@ import IMuBinary from "../IMuBinary";
 export class MuCollider {
     
     public static GetCollider (array: IMuBinary, colliderType: number): MuCollider {
+        if ((window as any).muTSlog) { console.log (`Redirecting to correct MuCollider @${array.offset}`) };
+        
         switch (colliderType) {
             case MuEnum.ET_MESH_COLLIDER:
             return new MuColliderMesh (array, false);

@@ -8,7 +8,7 @@ export default class MuBitConverter {
      */
     public static ReadByte (array: IMuBinary): number {
         if (array.data.length < array.offset + 1) {
-            throw `EOF @${array.offset}`;
+            throw `Premature EOF @${array.offset} in ReadByte`;
         }
         
         return array.data[array.offset++];
@@ -20,7 +20,7 @@ export default class MuBitConverter {
      */
     public static ReadInt (array: IMuBinary): number {
         if (array.data.length < array.offset + 4) {
-            throw `EOF @${array.offset}`;
+            throw `Premature EOF @${array.offset} in ReadInt`;
         }
         
         let output = 0;
@@ -55,6 +55,7 @@ export default class MuBitConverter {
         let multiplier = 1;
         
         while (true) {
+            // No error checking needed. ReadByte () already checks for premature EOF.
             let currentByte = this.ReadByte (array);
             
             // Ignore the first bit, apply current multiplier
@@ -79,7 +80,7 @@ export default class MuBitConverter {
      */
     public static ReadUInt (array: IMuBinary): number {
         if (array.data.length < array.offset + 4) {
-            throw `EOF @${array.offset}`;
+            throw `Premature EOF @${array.offset} in ReadUInt`;
         }
         
         let output = 0;
@@ -106,6 +107,7 @@ export default class MuBitConverter {
         let buffer = new ArrayBuffer (4);
         
         // Write next 4 bytes from the array to the buffer (offset gets incremented)
+        // No error checking needed. ReadInt () already checks for premature EOF.
         new Int32Array (buffer)[0] = this.ReadInt (array);
         
         //Interpret these bytes as a float, and return the value
@@ -117,6 +119,7 @@ export default class MuBitConverter {
      * @param array The data+offset object. The function mutates the offset; it increments itself.
      */
     public static ReadVector (array: IMuBinary): [number, number, number] {
+        // No error checking needed. ReadFloat () already checks for premature EOF.
         let x = this.ReadFloat (array); //Unity X
         let y = this.ReadFloat (array); //Unity Y
         let z = this.ReadFloat (array); //Unity Z
@@ -130,6 +133,7 @@ export default class MuBitConverter {
      * @param array The data+offset object. The function mutates the offset; it increments itself.
      */
     public static ReadQuaternion (array: IMuBinary): [number, number, number, number] {
+        // No error checking needed. ReadFloat () already checks for premature EOF.
         let x = this.ReadFloat (array); //Unity X
         let y = this.ReadFloat (array); //Unity Y
         let z = this.ReadFloat (array); //Unity Z
@@ -147,6 +151,7 @@ export default class MuBitConverter {
      * @param array The data+offset object. The function mutates the offset; it increments itself.
      */
     public static ReadTangent (array: IMuBinary): [number, number, number, number] {
+        // No error checking needed. ReadFloat () already checks for premature EOF.
         let x = this.ReadFloat (array); //Unity X
         let y = this.ReadFloat (array); //Unity Y
         let z = this.ReadFloat (array); //Unity Z
@@ -161,6 +166,10 @@ export default class MuBitConverter {
      * @param array The data+offset object. The function mutates the offset; it increments itself.
      */
     public static ReadColor (array: IMuBinary): [number, number, number, number] {
+        if (array.data.length < array.offset + 4) {
+            throw `Premature EOF @${array.offset} in ReadColor`;
+        }
+        
         // RGBA order is not explicitly documented anywhere, but I guess that's the order.
         let r = array.data[array.offset++] / 255;
         let g = array.data[array.offset++] / 255;
@@ -177,7 +186,7 @@ export default class MuBitConverter {
      */
     public static ReadBytes (array: IMuBinary, length: number): Uint8Array {
         if (array.data.length < array.offset + length) {
-            throw `EOF @${array.offset}`;
+            throw `Premature EOF @${array.offset} in ReadBytes`;
         }
         
         // Increment the offset first to avoid using temporary variable
@@ -190,6 +199,7 @@ export default class MuBitConverter {
      * @param array The data+offset object. The function mutates the offset; it increments itself.
      */
     public static ReadString (array: IMuBinary): string {
+        // No error checking needed. All methods of 'this' already check for premature EOF and there are no direct reads of data array
         let length = this.Read7Int (array);
         let stringData = this.ReadBytes (array, length);
         let output = "";

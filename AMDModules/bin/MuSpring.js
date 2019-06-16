@@ -7,6 +7,10 @@ define(["require", "exports", "./MuBitConverter"], function (require, exports, M
     MuBitConverter_1 = __importDefault(MuBitConverter_1);
     class MuSpring {
         constructor(array) {
+            if (window.muTSlog) {
+                console.log(`Reading MuSpring @${array.offset}`);
+            }
+            ;
             this.Spring = MuBitConverter_1.default.ReadFloat(array);
             this.Damper = MuBitConverter_1.default.ReadFloat(array);
             this.TargetPosition = MuBitConverter_1.default.ReadFloat(array);

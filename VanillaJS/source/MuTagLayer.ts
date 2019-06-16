@@ -4,6 +4,8 @@ class MuTagLayer {
     public Layer: number;
     
     constructor (array: IMuBinary) {
+        if ((window as any).muTSlog) { console.log (`Reading MuTagLayer @${array.offset}`) };
+        
         this.Tag = MuBitConverter.ReadString (array);
         this.Layer = MuBitConverter.ReadInt (array);
     }

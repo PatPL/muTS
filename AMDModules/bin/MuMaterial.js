@@ -13,6 +13,10 @@ define(["require", "exports", "./MuEnum", "./MuBitConverter", "./MuMatTex"], fun
             this.FloatProperties2 = {};
             this.FloatProperties3 = {};
             this.TextureProperties = {};
+            if (window.muTSlog) {
+                console.log(`Reading MuMaterial @${array.offset}`);
+            }
+            ;
             if (array.version >= 4) {
                 this.Name = MuBitConverter_1.default.ReadString(array);
                 this.ShaderName = MuBitConverter_1.default.ReadString(array);
@@ -46,7 +50,7 @@ define(["require", "exports", "./MuEnum", "./MuBitConverter", "./MuMatTex"], fun
                             this.TextureProperties[PropertyName] = new MuMatTex_1.default(array);
                             break;
                         default:
-                            console.warn(`This shouldn't happen. Invalid property type: ${PropertyType}`);
+                            console.warn(`Invalid property type: ${PropertyType}. Skipping.`);
                             break;
                     }
                 }
@@ -165,7 +169,7 @@ define(["require", "exports", "./MuEnum", "./MuBitConverter", "./MuMatTex"], fun
                         this.TextureProperties["_MainTex"] = new MuMatTex_1.default(array);
                         break;
                     default:
-                        throw `Wrong material type: ${Type} @${array.offset}`;
+                        throw `Unknown material type: ${Type} @${array.offset}`;
                 }
             }
         }

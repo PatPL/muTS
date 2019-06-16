@@ -12,16 +12,18 @@ class Mu {
             version: 0 // This is needed later in some mu elements
         }; //Prepare the object for reading array and keeping track of current offset
         
+        if ((window as any).muTSlog) { console.log (`Reading Mu @${array.offset}`) };
+        
         this.Magic = MuBitConverter.ReadInt (array);
         this.Version = MuBitConverter.ReadInt (array);
         array.version = this.Version; // Update the version in the object
         
-        if (
-            this.Magic != MuEnum.MODEL_BINARY ||
-            this.Version < 0 ||
-            this.Version > MuEnum.FILE_VERSION
-        ) {
-            throw `Errors found in mu file @${array.offset}`;
+        if (this.Magic != MuEnum.MODEL_BINARY) {
+            throw `Incorrect magic value. Is this really a .mu file? @${array.offset}`;
+        } else if (this.Version < 0) {
+            throw `File version is lower than 0. Is the file corrupted? @${array.offset}`;
+        } else if (this.Version > MuEnum.FILE_VERSION) {
+            throw `File version (${this.Version}) is higher than the highest supported version (${MuEnum.FILE_VERSION}). @${array.offset}`;
         }
         
         this.Name = MuBitConverter.ReadString (array);

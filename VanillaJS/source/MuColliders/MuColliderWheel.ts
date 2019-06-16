@@ -9,6 +9,8 @@ class MuColliderWheel {
     public SidewaysFriction: MuFriction;
     
     constructor (array: IMuBinary) {
+        if ((window as any).muTSlog) { console.log (`Reading MuColliderWheel @${array.offset}`) };
+        
         this.Mass = MuBitConverter.ReadFloat (array);
         this.Radius = MuBitConverter.ReadFloat (array);
         this.SuspensionDistance = MuBitConverter.ReadFloat (array);

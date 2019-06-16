@@ -10,6 +10,8 @@ export default class MuKey {
     public TangentMode: number;
     
     constructor (array: IMuBinary) {
+        if ((window as any).muTSlog) { console.log (`Reading MuKey @${array.offset}`) };
+        
         this.Time = MuBitConverter.ReadFloat (array);
         this.Value = MuBitConverter.ReadFloat (array);
         this.Tangent[0] = MuBitConverter.ReadFloat (array);

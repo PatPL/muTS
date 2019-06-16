@@ -13,13 +13,21 @@ define(["require", "exports", "./MuBitConverter", "./MuEnum", "./MuObject"], fun
                 offset: 0,
                 version: 0
             };
+            if (window.muTSlog) {
+                console.log(`Reading Mu @${array.offset}`);
+            }
+            ;
             this.Magic = MuBitConverter_1.default.ReadInt(array);
             this.Version = MuBitConverter_1.default.ReadInt(array);
             array.version = this.Version;
-            if (this.Magic != MuEnum_1.MuEnum.MODEL_BINARY ||
-                this.Version < 0 ||
-                this.Version > MuEnum_1.MuEnum.FILE_VERSION) {
-                throw `Errors found in mu file @${array.offset}`;
+            if (this.Magic != MuEnum_1.MuEnum.MODEL_BINARY) {
+                throw `Incorrect magic value. Is this really a .mu file? @${array.offset}`;
+            }
+            else if (this.Version < 0) {
+                throw `File version is lower than 0. Is the file corrupted? @${array.offset}`;
+            }
+            else if (this.Version > MuEnum_1.MuEnum.FILE_VERSION) {
+                throw `File version (${this.Version}) is higher than the highest supported version (${MuEnum_1.MuEnum.FILE_VERSION}). @${array.offset}`;
             }
             this.Name = MuBitConverter_1.default.ReadString(array);
             this.Object = new MuObject_1.default(array);

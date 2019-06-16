@@ -4,6 +4,8 @@ class MuTexture {
     public Type: number;
     
     constructor (array: IMuBinary) {
+        if ((window as any).muTSlog) { console.log (`Reading MuTexture @${array.offset}`) };
+        
         this.Name = MuBitConverter.ReadString (array);
         this.Type = MuBitConverter.ReadInt (array);
     }

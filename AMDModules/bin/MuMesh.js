@@ -17,10 +17,14 @@ define(["require", "exports", "./MuBitConverter", "./MuEnum", "./MuBoneWeight"],
             this.BindPoses = [];
             this.Submeshes = [];
             this.Colors = [];
+            if (window.muTSlog) {
+                console.log(`Reading MuMesh @${array.offset}`);
+            }
+            ;
             let start = MuBitConverter_1.default.ReadInt(array);
             if (start != MuEnum_1.MuEnum.ET_MESH_START) {
-                console.error("This shouldn't happen. Is the mu file corrupted?");
-                throw `Unexpected value spotted @${array.offset}`;
+                console.error("This shouldn't ever happen. Is the file corrupted?");
+                throw `Expected a MeshStartValue here (${MuEnum_1.MuEnum.ET_MESH_START}), but got (${start}) instead @${array.offset}`;
             }
             let VerticleCount = MuBitConverter_1.default.ReadInt(array);
             let SubmeshCount = MuBitConverter_1.default.ReadInt(array);
@@ -28,13 +32,25 @@ define(["require", "exports", "./MuBitConverter", "./MuEnum", "./MuBoneWeight"],
                 let Type = MuBitConverter_1.default.ReadInt(array);
                 switch (Type) {
                     case MuEnum_1.MuEnum.ET_MESH_END:
+                        if (window.muTSlog) {
+                            console.log(`MuMesh END @${array.offset}`);
+                        }
+                        ;
                         break MeshLoop;
                     case MuEnum_1.MuEnum.ET_MESH_VERTS:
+                        if (window.muTSlog) {
+                            console.log(`Reading MuMesh-Verticles (${VerticleCount} of them) @${array.offset}`);
+                        }
+                        ;
                         for (let i = 0; i < VerticleCount; ++i) {
                             this.Vertices.push(MuBitConverter_1.default.ReadVector(array));
                         }
                         break;
                     case MuEnum_1.MuEnum.ET_MESH_UV:
+                        if (window.muTSlog) {
+                            console.log(`Reading MuMesh-UV (${VerticleCount} of them) @${array.offset}`);
+                        }
+                        ;
                         for (let i = 0; i < VerticleCount; ++i) {
                             let x = MuBitConverter_1.default.ReadFloat(array);
                             let y = MuBitConverter_1.default.ReadFloat(array);
@@ -42,6 +58,10 @@ define(["require", "exports", "./MuBitConverter", "./MuEnum", "./MuBoneWeight"],
                         }
                         break;
                     case MuEnum_1.MuEnum.ET_MESH_UV2:
+                        if (window.muTSlog) {
+                            console.log(`Reading MuMesh-UV2 (${VerticleCount} of them) @${array.offset}`);
+                        }
+                        ;
                         for (let i = 0; i < VerticleCount; ++i) {
                             let x = MuBitConverter_1.default.ReadFloat(array);
                             let y = MuBitConverter_1.default.ReadFloat(array);
@@ -49,22 +69,43 @@ define(["require", "exports", "./MuBitConverter", "./MuEnum", "./MuBoneWeight"],
                         }
                         break;
                     case MuEnum_1.MuEnum.ET_MESH_NORMALS:
+                        if (window.muTSlog) {
+                            console.log(`Reading MuMesh-Normals (${VerticleCount} of them) @${array.offset}`);
+                        }
+                        ;
                         for (let i = 0; i < VerticleCount; ++i) {
                             this.Normals.push(MuBitConverter_1.default.ReadVector(array));
                         }
                         break;
                     case MuEnum_1.MuEnum.ET_MESH_TANGENTS:
+                        if (window.muTSlog) {
+                            console.log(`Reading MuMesh-Tangents (${VerticleCount} of them) @${array.offset}`);
+                        }
+                        ;
                         for (let i = 0; i < VerticleCount; ++i) {
                             this.Tangents.push(MuBitConverter_1.default.ReadTangent(array));
                         }
                         break;
                     case MuEnum_1.MuEnum.ET_MESH_BONE_WEIGHTS:
+                        if (window.muTSlog) {
+                            console.log(`Reading MuMesh-BoneWeights (${VerticleCount} of them) @${array.offset}`);
+                        }
+                        ;
                         for (let i = 0; i < VerticleCount; ++i) {
                             this.BoneWeights.push(new MuBoneWeight_1.default(array));
                         }
                         break;
                     case MuEnum_1.MuEnum.ET_MESH_BIND_POSES:
-                        for (let i = 0; i < VerticleCount; ++i) {
+                        if (window.muTSlog) {
+                            console.log(`Reading MuMesh-BindPoses (I'll tell you how many of them in a second) @${array.offset}`);
+                        }
+                        ;
+                        let BindPoseCount = MuBitConverter_1.default.ReadInt(array);
+                        if (window.muTSlog) {
+                            console.log(`There are ${BindPoseCount} bind poses to read`);
+                        }
+                        ;
+                        for (let i = 0; i < BindPoseCount; ++i) {
                             let pose = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                             for (let i = 0; i < 16; ++i) {
                                 pose[i] = MuBitConverter_1.default.ReadFloat(array);
@@ -73,10 +114,15 @@ define(["require", "exports", "./MuBitConverter", "./MuEnum", "./MuBoneWeight"],
                         }
                         break;
                     case MuEnum_1.MuEnum.ET_MESH_TRIANGLES:
+                        if (window.muTSlog) {
+                            console.log(`Reading MuMesh-Triangles (${VerticleCount} of them) @${array.offset}`);
+                        }
+                        ;
                         let TriangleCount = MuBitConverter_1.default.ReadInt(array);
                         let Triangles = [];
                         if (TriangleCount % 3 != 0) {
-                            console.warn("Is this guaranteed?");
+                            console.warn("Is this guaranteed? Apparently not.");
+                            console.warn("Length of the array with triangles is not a multiple of 3. Will try to continue anyway. Mesh might be corrupted though.");
                         }
                         for (let i = 0; i < TriangleCount / 3; ++i) {
                             let x = MuBitConverter_1.default.ReadInt(array);
@@ -92,12 +138,16 @@ define(["require", "exports", "./MuBitConverter", "./MuEnum", "./MuBoneWeight"],
                         this.Submeshes.push(Triangles);
                         break;
                     case MuEnum_1.MuEnum.ET_MESH_VERTEX_COLORS:
+                        if (window.muTSlog) {
+                            console.log(`Reading MuMesh-VertexColors (${VerticleCount} of them) @${array.offset}`);
+                        }
+                        ;
                         for (let i = 0; i < VerticleCount; ++i) {
                             this.Colors.push(MuBitConverter_1.default.ReadColor(array));
                         }
                         break;
                     default:
-                        throw `Incorrect mesh value type: ${Type} @${array.offset}`;
+                        throw `Unknown mesh value type: ${Type} @${array.offset}`;
                 }
             }
         }

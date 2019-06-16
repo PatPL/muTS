@@ -7,6 +7,8 @@ class MuCurve {
     public Keys: MuKey[] = [];
     
     constructor (array: IMuBinary) {
+        if ((window as any).muTSlog) { console.log (`Reading MuCurve @${array.offset}`) };
+        
         this.Path = MuBitConverter.ReadString (array);
         this.Property = MuBitConverter.ReadString (array);
         this.Type = MuBitConverter.ReadInt (array);

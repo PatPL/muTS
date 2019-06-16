@@ -12,6 +12,8 @@ export default class MuColliderCapsule {
     public Center: [number, number, number];
     
     constructor (array: IMuBinary, isTwo: boolean) {
+        if ((window as any).muTSlog) { console.log (`Reading MuColliderCapsule @${array.offset}`) };
+        
         this.HasTrigger = isTwo;
         if (this.HasTrigger) {
             this.IsTrigger = MuBitConverter.ReadByte (array);

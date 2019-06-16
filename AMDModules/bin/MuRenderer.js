@@ -10,6 +10,10 @@ define(["require", "exports", "./MuBitConverter", "./MuEnum"], function (require
             this.CastShadows = 1;
             this.ReceiveShadows = 1;
             this.Materials = [];
+            if (window.muTSlog) {
+                console.log(`Reading MuRenderer @${array.offset}`);
+            }
+            ;
             if (array.version > 0) {
                 this.CastShadows = MuBitConverter_1.default.ReadByte(array);
                 this.ReceiveShadows = MuBitConverter_1.default.ReadByte(array);

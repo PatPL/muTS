@@ -11,6 +11,8 @@ export default class MuColliderMesh {
     public Mesh: MuMesh;
     
     constructor (array: IMuBinary, isTwo: boolean) {
+        if ((window as any).muTSlog) { console.log (`Reading MuColliderMesh @${array.offset}`) };
+        
         this.HasTrigger = isTwo;
         if (this.HasTrigger) {
             this.IsTrigger = MuBitConverter.ReadByte (array);

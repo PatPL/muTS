@@ -1,4 +1,9 @@
 Develop muTS on AMDModules' source files and use respective compilers.
+You need node and typescript to compile the files.
+Open your terminal and navigate to AMDModules directory. Run 'tsc -w' command to start compiler.
+Test your changes by opening 'index.html' locally. No need for a web server.
+
+Set muTSlog to true to enable verbose logging outside of demo page. (Type 'muTSlog = true' in console)
 
 To prepare VanillaJS' source files, copy AMDModules' source and remove 'import' and 'export' stuff.
 Check out the example below, you'll see what I mean.

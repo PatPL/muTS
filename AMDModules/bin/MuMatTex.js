@@ -9,6 +9,10 @@ define(["require", "exports", "./MuBitConverter"], function (require, exports, M
         constructor(array) {
             this.Scale = [0, 0];
             this.Offset = [0, 0];
+            if (window.muTSlog) {
+                console.log(`Reading MuMatTex @${array.offset}`);
+            }
+            ;
             this.Index = MuBitConverter_1.default.ReadInt(array);
             this.Scale[0] = MuBitConverter_1.default.ReadFloat(array);
             this.Scale[1] = MuBitConverter_1.default.ReadFloat(array);

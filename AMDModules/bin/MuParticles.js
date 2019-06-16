@@ -20,6 +20,10 @@ define(["require", "exports", "./MuBitConverter"], function (require, exports, M
                 [0, 0, 0, 0]
             ];
             this.UVAnimation = [0, 0, 0];
+            if (window.muTSlog) {
+                console.log(`Reading MuParticles @${array.offset}`);
+            }
+            ;
             this.Emit = MuBitConverter_1.default.ReadByte(array);
             this.Shape = MuBitConverter_1.default.ReadInt(array);
             this.Shape3D = MuBitConverter_1.default.ReadVector(array);

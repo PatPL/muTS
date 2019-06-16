@@ -14,6 +14,8 @@ export default class MuSkinnedMeshRenderer {
     public Mesh: MuMesh;
     
     constructor (array: IMuBinary) {
+        if ((window as any).muTSlog) { console.log (`Reading MuSkinnedMeshRenderer @${array.offset}`) };
+        
         let MaterialCount = MuBitConverter.ReadInt (array);
         for (let i = 0; i < MaterialCount; ++i) {
             this.Materials.push (MuBitConverter.ReadInt (array));

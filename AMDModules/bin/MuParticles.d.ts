@@ -1,5 +1,4 @@
 import IMuBinary from "./IMuBinary";
-declare type ColorAnimation = [[number, number, number, number], [number, number, number, number], [number, number, number, number], [number, number, number, number], [number, number, number, number]];
 export default class MuParticles {
     Emit: number;
     Shape: number;
@@ -37,5 +36,6 @@ export default class MuParticles {
     constructor(array: IMuBinary);
     Serialize(data: number[]): void;
 }
+declare type ColorAnimation = [[number, number, number, number], [number, number, number, number], [number, number, number, number], [number, number, number, number], [number, number, number, number]];
 export {};
 //# sourceMappingURL=MuParticles.d.ts.map

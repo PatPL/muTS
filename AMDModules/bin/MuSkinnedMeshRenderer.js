@@ -10,6 +10,10 @@ define(["require", "exports", "./MuBitConverter", "./MuMesh", "./MuEnum"], funct
         constructor(array) {
             this.Materials = [];
             this.Bones = [];
+            if (window.muTSlog) {
+                console.log(`Reading MuSkinnedMeshRenderer @${array.offset}`);
+            }
+            ;
             let MaterialCount = MuBitConverter_1.default.ReadInt(array);
             for (let i = 0; i < MaterialCount; ++i) {
                 this.Materials.push(MuBitConverter_1.default.ReadInt(array));

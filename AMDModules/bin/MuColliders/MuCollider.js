@@ -11,6 +11,10 @@ define(["require", "exports", "./MuColliderMesh", "../MuEnum", "./MuColliderSphe
     MuColliderWheel_1 = __importDefault(MuColliderWheel_1);
     class MuCollider {
         static GetCollider(array, colliderType) {
+            if (window.muTSlog) {
+                console.log(`Redirecting to correct MuCollider @${array.offset}`);
+            }
+            ;
             switch (colliderType) {
                 case MuEnum_1.MuEnum.ET_MESH_COLLIDER:
                     return new MuColliderMesh_1.default(array, false);

@@ -1,0 +1,45 @@
+<!-- http://motherfuckingwebsite.com/ -->
+<html>
+
+<head>
+	<meta charset="utf-8">
+	
+	<title>muTS demo</title>
+	
+    <script src="VanillaJS/muTS.js"></script>
+    <script>
+        document.addEventListener ("DOMContentLoaded", () => {
+            // Hook up events once everyting has loaded
+            let FileInputElement = document.getElementById ("fileInput");
+            
+            document.getElementById ("parseFile").addEventListener ("click", () => {
+                if (FileInputElement.files.length < 1) {
+                    console.log ("No file was selected");
+                    return;
+                }
+                
+                let reader = new FileReader();
+                
+                reader.onload = () => {
+                    console.log ("Result:", new Mu (new Uint8Array (reader.result)));
+                }
+                
+                reader.readAsArrayBuffer (FileInputElement.files[0]);
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <h3>muTS demo powered by VanillaJS</h3>
+    <br>
+    <a href="index.html">Go to AMDModules version</a>
+    <hr>
+    <input accept=".mu" type="file" id="fileInput">
+    <br>
+    <button id="parseFile">Parse MU file. Open console to view the result (Probably F12 unless you use Opera)</button>
+    <br>
+    <input type="checkbox" onchange="muTSlog = this.checked;">Enable verbose logging (Toggles global muTSlog variable)
+</body>
+
+</html>

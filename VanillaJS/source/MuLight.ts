@@ -8,6 +8,8 @@ class MuLight {
     public SpotAngle: number = 0;
     
     constructor (array: IMuBinary) {
+        if ((window as any).muTSlog) { console.log (`Reading MuLight @${array.offset}`) };
+        
         this.Type = MuBitConverter.ReadInt (array);
         this.Intensity = MuBitConverter.ReadFloat (array);
         this.Range = MuBitConverter.ReadFloat (array);

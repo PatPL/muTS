@@ -10,6 +10,8 @@ export default class MuColliderBox {
     public Center: [number, number, number];
     
     constructor (array: IMuBinary, isTwo: boolean) {
+        if ((window as any).muTSlog) { console.log (`Reading MuColliderBox @${array.offset}`) };
+        
         this.HasTrigger = isTwo;
         if (this.HasTrigger) {
             this.IsTrigger = MuBitConverter.ReadByte (array);

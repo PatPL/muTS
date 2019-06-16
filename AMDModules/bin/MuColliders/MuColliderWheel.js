@@ -9,6 +9,10 @@ define(["require", "exports", "../MuBitConverter", "../MuEnum", "../MuSpring", "
     MuFriction_1 = __importDefault(MuFriction_1);
     class MuColliderWheel {
         constructor(array) {
+            if (window.muTSlog) {
+                console.log(`Reading MuColliderWheel @${array.offset}`);
+            }
+            ;
             this.Mass = MuBitConverter_1.default.ReadFloat(array);
             this.Radius = MuBitConverter_1.default.ReadFloat(array);
             this.SuspensionDistance = MuBitConverter_1.default.ReadFloat(array);
