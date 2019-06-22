@@ -21,36 +21,35 @@
     <br>
     <a href="index.html">Go to main demo</a>
     <hr>
-    <input accept=".mu" type="file" id="fileInput">
-    <br>
-    <br>
-    Texture files used by this model (<span id="modelName">No model</span>):
-    <ul id="output">
-        
-    </ul>
+    <input multiple accept=".mu" type="file" id="fileInput">
+    <hr>
+    <span id="output">no models uploaded</span>
 </body>
 
 <script>
     function Update () {
-        if (document.getElementById ("fileInput").files.length < 1) {
-            document.getElementById ("modelName").innerHTML = "No model";
-            document.getElementById ("fileInput").innerHTML = "";
+        let files = document.getElementById ("fileInput").files;
+        if (files.length < 1) {
+            document.getElementById ("output").innerHTML = "no models uploaded";
             return;
         }
         
-        let reader = new FileReader();
+        document.getElementById ("output").innerHTML = "";
         
-        reader.onload = () => {
-            let mu = new Mu (new Uint8Array (reader.result));
-            document.getElementById ("modelName").innerHTML = document.getElementById ("fileInput").files[0].name;
+        for (let i = 0; i < files.length; ++i) {
+            let reader = new FileReader();
             
-            document.getElementById ("output").innerHTML = "";
-            mu.Object.Textures.forEach (tex => {
-                document.getElementById ("output").innerHTML += `<li>${ tex.Name }</li>`;
-            });
+            reader.onload = () => {
+                let mu = new Mu (new Uint8Array (reader.result));
+                document.getElementById ("output").innerHTML += `Textures used by [${files[i].name}]:<ul>`;
+                mu.Object.Textures.forEach (tex => {
+                    document.getElementById ("output").innerHTML += `<li>${ tex.Name }</li>`;
+                });
+                document.getElementById ("output").innerHTML += `</ul><hr>`;
+            }
+            
+            reader.readAsArrayBuffer (files[i]);
         }
-        
-        reader.readAsArrayBuffer (document.getElementById ("fileInput").files[0]);
     }
     
     document.getElementById ("fileInput").addEventListener ("change", Update);
