@@ -1,0 +1,86 @@
+<!-- http://motherfuckingwebsite.com/ -->
+<html>
+
+<head>
+	<meta charset="utf-8">
+	
+	<title>Required mu textures</title>
+    
+    <style>
+        body {
+            font-family: "Verdana";
+        }
+    </style>
+    
+    <script src="VanillaJS/muTS.js"></script>
+</head>
+
+<body>
+    <h3>Texture list tool</h3>
+    <p>Lists every texture used by given file. (Drag & drop works here)</p>
+    <br>
+    <a href="index.html">Go to main demo</a>
+    <hr>
+    <input accept=".mu" type="file" id="fileInput">
+    <br>
+    <br>
+    Texture files used by this model (<span id="modelName">No model</span>):
+    <ul id="output">
+        
+    </ul>
+</body>
+
+<script>
+    function Update () {
+        if (document.getElementById ("fileInput").files.length < 1) {
+            document.getElementById ("modelName").innerHTML = "No model";
+            document.getElementById ("fileInput").innerHTML = "";
+            return;
+        }
+        
+        let reader = new FileReader();
+        
+        reader.onload = () => {
+            let mu = new Mu (new Uint8Array (reader.result));
+            document.getElementById ("modelName").innerHTML = document.getElementById ("fileInput").files[0].name;
+            
+            document.getElementById ("output").innerHTML = "";
+            mu.Object.Textures.forEach (tex => {
+                document.getElementById ("output").innerHTML += `<li>${ tex.Name }</li>`;
+            });
+        }
+        
+        reader.readAsArrayBuffer (document.getElementById ("fileInput").files[0]);
+    }
+    
+    document.getElementById ("fileInput").addEventListener ("change", Update);
+    
+    window.addEventListener ("drop", e => {
+        e.stopPropagation ();
+        e.preventDefault ();
+        
+        if (!e.dataTransfer) {
+            return;
+        }
+        
+        let files = e.dataTransfer.files;
+        
+        if (files.length == 0) {
+            return;
+        }
+        
+        document.getElementById ("fileInput").files = files;
+        Update ();
+    });
+    
+    window.addEventListener ("dragover", e => {
+        e.stopPropagation ();
+        e.preventDefault ();
+        
+        if (e.dataTransfer) {
+            e.dataTransfer.dropEffect = "copy";
+        }
+    });
+</script>
+
+</html>
