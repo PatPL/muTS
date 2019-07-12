@@ -1,0 +1,105 @@
+<!-- http://motherfuckingwebsite.com/ -->
+<html>
+
+<head>
+	<meta charset="utf-8">
+	
+	<title>Mu animations</title>
+    
+    <style>
+        body {
+            font-family: "Verdana";
+        }
+    </style>
+    
+    <script src="VanillaJS/muTS.js"></script>
+</head>
+
+<body>
+    <h3>Animation list tool</h3>
+    <p>Lists every animation used by given file. (Drag & drop works here)</p>
+    <br>
+    <a href="index.html">Go to main demo</a>
+    <hr>
+    <input multiple accept=".mu" type="file" id="fileInput">
+    <hr>
+    <span id="output">no models uploaded</span>
+</body>
+
+<script>
+    function Update () {
+        let files = document.getElementById ("fileInput").files;
+        if (files.length < 1) {
+            document.getElementById ("output").innerHTML = "no models uploaded";
+            return;
+        }
+        
+        document.getElementById ("output").innerHTML = "";
+        
+        for (let i = 0; i < files.length; ++i) {
+            let reader = new FileReader();
+            
+            reader.onload = () => {
+                let mu = new Mu (new Uint8Array (reader.result));
+                let anims = [];
+                
+                function recursiveAnimSearch (muObj) {
+                    if (muObj.Animation && muObj.Animation.Clips.length > 0) {
+                        muObj.Animation.Clips.forEach (clip => {
+                            anims.push (clip.Name);
+                        });
+                    }
+                    
+                    muObj.Children.forEach (c => {
+                        recursiveAnimSearch (c);
+                    });
+                }
+                
+                recursiveAnimSearch (mu.Object);
+                
+                if (anims.length) {
+                    document.getElementById ("output").innerHTML += `Animation clips in [${files[i].name}]:<ul>`;
+                    anims.forEach (clip => {
+                        document.getElementById ("output").innerHTML += `<li>${ clip }</li>`;
+                    });
+                    document.getElementById ("output").innerHTML += `</ul><hr>`;
+                } else {
+                    document.getElementById ("output").innerHTML += `No animations found in [${files[i].name}]<hr>`;
+                }
+            }
+            
+            reader.readAsArrayBuffer (files[i]);
+        }
+    }
+    
+    document.getElementById ("fileInput").addEventListener ("change", Update);
+    
+    window.addEventListener ("drop", e => {
+        e.stopPropagation ();
+        e.preventDefault ();
+        
+        if (!e.dataTransfer) {
+            return;
+        }
+        
+        let files = e.dataTransfer.files;
+        
+        if (files.length == 0) {
+            return;
+        }
+        
+        document.getElementById ("fileInput").files = files;
+        Update ();
+    });
+    
+    window.addEventListener ("dragover", e => {
+        e.stopPropagation ();
+        e.preventDefault ();
+        
+        if (e.dataTransfer) {
+            e.dataTransfer.dropEffect = "copy";
+        }
+    });
+</script>
+
+</html>
