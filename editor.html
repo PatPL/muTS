@@ -1,0 +1,171 @@
+<!-- http://motherfuckingwebsite.com/ -->
+<html>
+
+<head>
+	<meta charset="utf-8">
+	
+	<title>mu editor</title>
+    
+    <style>
+        body {
+            font-family: "Verdana";
+        }
+    </style>
+    
+    <script src="VanillaJS/muTS.js"></script>
+</head>
+
+<body>
+    <div id="main" style="float: left; width: 100%;">
+        <h3>Mu editor tool</h3>
+        <p>Open an mu file, edit it, and download edited version</p>
+        Toggle tutorial: <input type="checkbox" id="tutToggle">
+        <br><br>
+        <a href="index.html">Go to main demo</a>
+        <hr>
+        <input multiple accept=".mu" type="file" id="fileInput">
+        <hr>
+        <ul id="output"></ul>
+    </div>
+    <div id="tut" style="float: left; display: none; width: 50%; height: 100%; overflow-y: auto; box-sizing: border-box; border: solid #444 2px; padding: 8px;">
+        <b>I recommend a chromium based browser, because there you can edit JS objects directly in devtools.</b>
+        <p>
+            While you <i>can</i> edit the object in, for example, Firefox, you'd need to access all of the variables directly.
+            For example, below I can edit 'LocalPosition' directly, while in firefox, I'd need to save the mu object as a global variable,
+            and then type <pre>temp0.Object.Transform.LocalPosition = [0, 0, 0]</pre> in console. It's inefficient, but usable.
+        </p>
+        
+        <h1>Usage example:</h1>
+        In this tutorial I'll edit this model, to show how to use this tool.
+        <br>
+        I'll move the model to the center of the scene, and remove the fairing object.
+        <img src="toolAssets/editorTutorial/tut1.png" style="width: 100%; border: solid #444 2px; margin-top: 4px;"/><hr>
+        Open the mu file on this website. You can use Drag&Drop, and you can upload multiple files at once, multiple times. Previous files won't be removed.
+        <img src="toolAssets/editorTutorial/tut2.png" style="width: 100%; border: solid #444 2px; margin-top: 4px;"/><hr>
+        Press 'Display in console' to output the JS representation of the file to the browser's console in devtools (F12 > 'Console' tab)
+        <img src="toolAssets/editorTutorial/tut3.png" style="width: 100%; border: solid #444 2px; margin-top: 4px;"/><hr>
+        Double click a simple value to edit it directly
+        <img src="toolAssets/editorTutorial/tut3_1.png" style="width: 100%; border: solid #444 2px; margin-top: 4px;"/><hr>
+        You can edit more advanced values by storing them as a global variable. All of that is stored by reference, so changes in that variable will be equal to changes in original object
+        <img src="toolAssets/editorTutorial/tut3_2.png" style="width: 100%; border: solid #444 2px; margin-top: 4px;"/><br>
+        <img src="toolAssets/editorTutorial/tut3_3.png" style="width: 100%; border: solid #444 2px; margin-top: 4px;"/><hr>
+        As you can see, the changes made to temp1 applied to the children table.
+        <img src="toolAssets/editorTutorial/tut4.png" style="width: 100%; border: solid #444 2px; margin-top: 4px;"/><hr>
+        I edited everything I wanted to edit, so it's time to download the file.
+        <br>
+        Click the 'Download this object' button to download the mu file, with your changes already applied
+        <img src="toolAssets/editorTutorial/tut5.png" style="width: 100%; border: solid #444 2px; margin-top: 4px;"/><hr>
+        This is the downloaded file, opened in blender. Notice how it's centered, and has no fairing.
+        <img src="toolAssets/editorTutorial/tut6.png" style="width: 100%; border: solid #444 2px; margin-top: 4px;"/>
+    </div>
+</body>
+
+<script>
+    function Update () {
+        let files = document.getElementById ("fileInput").files;
+        if (files.length < 1) {
+            document.getElementById ("output").innerHTML = "no models uploaded";
+            return;
+        }
+        
+        for (let i = 0; i < files.length; ++i) {
+            let reader = new FileReader();
+            const filename = files[i].name;
+            
+            reader.onload = () => {
+                let mu = new Mu (new Uint8Array (reader.result));
+                
+                let element = document.createElement ("li");
+                element.innerHTML = `${ filename }: `;
+                
+                let editButton = document.createElement ("button");
+                editButton.innerHTML = "Display in console";
+                editButton.addEventListener ("click", () => {
+                    console.log (`${ filename }:`);
+                    console.log (mu);
+                });
+                
+                let downloadButton = document.createElement ("button");
+                downloadButton.innerHTML = "Download this object";
+                downloadButton.addEventListener ("click", () => {
+                    Download (mu, filename);
+                });
+                
+                let removeButton = document.createElement ("button");
+                removeButton.innerHTML = "Remove this object from this list";
+                removeButton.addEventListener ("click", () => {
+                    if (confirm (`You're going to remove ${filename} from the list\n\nAre you sure? All changes will be lost, and this can't be reverted`)) {
+                        element.remove ();
+                    }
+                });
+                
+                element.appendChild (editButton);
+                element.appendChild (downloadButton);
+                element.appendChild (removeButton);
+                
+                document.getElementById ("output").appendChild (element);
+            }
+            
+            reader.readAsArrayBuffer (files[i]);
+        }
+    }
+    
+    function Download (mu, filename) {
+        let binary = mu.Serialize ();
+        
+        let saveDialog = document.createElement ("a");
+        let blob = new Blob ([binary], {
+            type: "application/octet-stream"
+        });
+        
+        saveDialog.href = URL.createObjectURL (blob);
+        saveDialog.download = filename;
+        
+        let evt = document.createEvent("MouseEvents"); 
+        evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null); 
+        saveDialog.dispatchEvent(evt);
+    }
+    
+    document.getElementById ("fileInput").addEventListener ("change", Update);
+    
+    window.addEventListener ("drop", e => {
+        e.stopPropagation ();
+        e.preventDefault ();
+        
+        if (!e.dataTransfer) {
+            return;
+        }
+        
+        let files = e.dataTransfer.files;
+        
+        if (files.length == 0) {
+            return;
+        }
+        
+        document.getElementById ("fileInput").files = files;
+        Update ();
+    });
+    
+    window.addEventListener ("dragover", e => {
+        e.stopPropagation ();
+        e.preventDefault ();
+        
+        if (e.dataTransfer) {
+            e.dataTransfer.dropEffect = "copy";
+        }
+    });
+    
+    document.getElementById ("tutToggle").addEventListener ("change", () => {
+        let checked = document.getElementById ("tutToggle").checked;
+        
+        if (checked) {
+            document.getElementById ("main").style.width = "50%";
+            document.getElementById ("tut").style.display = "block";
+        } else {
+            document.getElementById ("main").style.width = "100%";
+            document.getElementById ("tut").style.display = "none";
+        }
+    });
+</script>
+
+</html>
